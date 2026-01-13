@@ -44,7 +44,7 @@
             >
             <template v-slot:append>
               <q-icon
-                :name="passwordIsVisible ? 'visibility' : 'visibility_off'"
+                :name="passwordIsVisible ? 'visibility_off' : 'visibility'"
                 @click="showPassword"
               />
             </template>
