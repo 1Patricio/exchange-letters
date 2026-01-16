@@ -5,7 +5,7 @@ import api from "@/api/api";
 
 export const useAuthStore = defineStore("authStore", () => {
   const user = ref<User | null>(null);
-  const token = ref<string | null>(null);
+  const token = ref<string | null>(localStorage.getItem('token'));
   const error = ref<string | null>(null);
 
   try {
@@ -14,35 +14,25 @@ export const useAuthStore = defineStore("authStore", () => {
       token.value = saved
       api.defaults.headers.common['Authorization'] = `Bearer ${saved}`
     }
-  } catch (e) {
+  } catch (err) {
+    throw err
   }
 
   async function login(email: string, password: string) {
-    error.value = null;
+    error.value = null
 
     try {
-      const res = await api.post("/login", { email, password });
+      const { data } = await api.post('/login', { email, password })
 
-      user.value = res.data.user ?? ({ email } as User);
-      token.value = res.data.token ?? null;
+      user.value = data.user
+      token.value = data.token
 
-      if (token.value) {
-        try {
-          localStorage.setItem('token', token.value)
-          api.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
-        } catch (e) {}
-      }
+      localStorage.setItem('token', data.token)
+      api.defaults.headers.common.Authorization = `Bearer ${data.token}`
 
-      return res.data;
+      return data
     } catch (err: any) {
-      if(err.response.data.message == "Incorrect password/email") {
-        error.value = "Credenciais Inválidas";
-
-      } else {
-        error.value =
-        err?.response?.data?.message || err.message || "Erro no login";
-      }
-      throw new Error(error.value!);
+      throw err
     }
   }
 
@@ -50,38 +40,16 @@ export const useAuthStore = defineStore("authStore", () => {
     error.value = null;
 
     try {
-      const res = await api.post("/register", {
+      await api.post("/register", {
         name,
         email,
         password,
       });
-
-      try {
-        user.value = res.data.user ?? ({ email } as User);
-        token.value = res.data.token ?? null;
-
-        if (token.value) {
-          try {
-            localStorage.setItem('token', token.value)
-            api.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
-          } catch (e) {}
-        }
-
-        return res.data;
-      } catch (err: any) {
-        if (err.code == "ERR_BAD_REQUEST") {
-          error.value = "Credenciais Inválidas";
-        } else {
-          error.value =
-            err?.response?.data?.message || err.message || "Erro no login";
-        }
-        throw new Error(error.value!);
-      }
     } catch (err: any) {
       if (err.code == "ERR_BAD_REQUEST") {
-        error.value = err?.response?.data?.message || err.response.data.error || "Erro ao cadastrar";
+        error.value = err?.response?.data?.message || err.response.data.error;
       } else {
-        error.value = err?.response?.data?.message || err.message || "Erro no login";
+        error.value = err?.response?.data?.message || err.message;
       }
 
       throw new Error(error.value!);
@@ -94,24 +62,35 @@ export const useAuthStore = defineStore("authStore", () => {
     try {
       localStorage.removeItem('token')
       delete api.defaults.headers.common['Authorization']
-    } catch (e) {}
+    } catch (err) {
+      throw err
+    }
   }
 
   const isAuthenticated = () => !!token.value;
 
   async function getUserCurrent() {
-    error.value = null;
+    const savedToken = localStorage.getItem('token')
+    if (!savedToken) return null
 
-    if (!token.value) return null;
+    api.defaults.headers.common.Authorization = `Bearer ${savedToken}`
 
     try {
-      const res = await api.get("/auth/me");
+      const res = await api.get("/me");
 
-      user.value = res.data.user;
-      return user.value;
+      if (res != null) {
+        user.value = {
+          id: res.data.id,
+          name: res.data.name,
+          email: res.data.email,
+          cards: res.data.cards
+        }
+        console.log(user.value)
+        return user.value;
+      }
     } catch (err: any) {
       await logout();
-      return null;
+      throw err;
     }
   }
 

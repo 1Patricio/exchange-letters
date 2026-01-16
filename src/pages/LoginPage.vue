@@ -91,9 +91,11 @@
 import { computed, ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 import { useRouter } from 'vue-router';
+import { useNotification } from '@/composables/useNotification';
 
 const auth = useAuthStore()
 const router = useRouter()
+const notification = useNotification()
 
 const email = ref('');
 const password = ref('');
@@ -117,7 +119,11 @@ async function handleSubmit() {
     await auth.login(email.value, password.value)
     router.push('/home')
   } catch (err: any) {
-    error.value = err?.message || 'Erro ao autenticar'
+    error.value = err?.response.data.message || 'Erro ao autenticar'
+    if (error.value == 'Incorrect password/email') {
+      error.value = 'Acesso não autorizado'
+    }
+    notification.error('Acesso não autorizado')
   }
 }
 

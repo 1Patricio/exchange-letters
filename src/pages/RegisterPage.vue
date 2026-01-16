@@ -18,6 +18,7 @@
           <q-form
             style="max-width: 500px; margin: auto;"
             class="q-glutter-md"
+            @submit.prevent="handleSubmit()"
           >
             <div class="text-center q-mb-lg">
               <h4 class="text-secondary text-bold q-mb-sm">Faça seu cadastro</h4>
@@ -66,7 +67,7 @@
               :disable="isDisabled"
               style="width: 100%;"
               class="q-mb-sm"
-              @click="handleSubmit()"
+              type="submit"
             />
 
             <div class="text-center q-mb-sm">
@@ -94,6 +95,9 @@
 import { computed, ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 import { useRouter } from 'vue-router';
+import { useNotification } from '@/composables/useNotification';
+
+const notification = useNotification()
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -120,10 +124,13 @@ async function handleSubmit() {
   error.value = null
   try {
     await auth.register(name.value, email.value, password.value)
-    router.push('/home')
+    notification.success('Usuário cadastrado com sucesso!')
   } catch (err: any) {
-    error.value = err?.message || 'Erro ao autenticar'
+    error.value = err?.message || 'Erro ao cadastrar usuário'
+    console.error("Erro: ", err)
+    notification.error('Erro ao cadastrar usuário!')
   }
+  router.push('/')
 }
 
 function requiredField(val: string, fieldName = 'Campo') {

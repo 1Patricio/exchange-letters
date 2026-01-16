@@ -6,6 +6,9 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/layouts/LoginLayout.vue'),
+      meta: {
+        requiresAuth: false
+      },
       children: [
         {
           path: '',
@@ -17,14 +20,52 @@ const router = createRouter({
           name: 'register',
           component: () => import('@/pages/RegisterPage.vue')
         },
-        {
-          path:'home',
-          name: 'home',
-          component: () => import('@/pages/HomePage.vue')
-        }
       ],
     },
+    {
+      path: '/',
+      component: () => import('@/layouts/DefaultLayout.vue'),
+      children: [
+        {
+          path: 'home',
+          name: 'home',
+          component: () => import('@/pages/HomePage.vue'),
+          meta: {
+            requiresAuth: false
+          }
+        },
+        {
+          path: 'card',
+          name: 'card',
+          component: () => import('@/pages/CardPage.vue'),
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: 'profile',
+          name: 'profile',
+          component: () => import('@/pages/ProfilePage.vue'),
+          meta: {
+            requiresAuth: true
+          }
+        },
+      ]
+    }
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  if (requiresAuth && !token) {
+    next({ name: 'login'})
+  } else if(!requiresAuth && token && to.name === 'login') {
+    next({ name: 'home'})
+  } else {
+    next()
+  }
 })
 
 export default router
