@@ -1,3 +1,3 @@
 <template>
-  Home
+  Card Page
 </template>

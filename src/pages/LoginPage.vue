@@ -117,7 +117,7 @@ async function handleSubmit() {
   error.value = null
   try {
     await auth.login(email.value, password.value)
-    router.push('/home')
+    router.push('/trades')
   } catch (err: any) {
     error.value = err?.response.data.message || 'Erro ao autenticar'
     if (error.value == 'Incorrect password/email') {

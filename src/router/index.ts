@@ -27,12 +27,20 @@ const router = createRouter({
       component: () => import('@/layouts/DefaultLayout.vue'),
       children: [
         {
-          path: 'home',
-          name: 'home',
-          component: () => import('@/pages/HomePage.vue'),
+          path: 'trades',
+          name: 'trades',
+          component: () => import('@/pages/TradePage.vue'),
           meta: {
             requiresAuth: false
           }
+        },
+        {
+          path: 'trades/:id',
+          name: 'trades-view',
+          component: () => import('@/pages/TradeView.vue'),
+          meta: {
+            requiresAuth: false
+          },
         },
         {
           path: 'card',
@@ -62,7 +70,7 @@ router.beforeEach((to, from, next) => {
   if (requiresAuth && !token) {
     next({ name: 'login'})
   } else if(!requiresAuth && token && to.name === 'login') {
-    next({ name: 'home'})
+    next({ name: 'trades'})
   } else {
     next()
   }

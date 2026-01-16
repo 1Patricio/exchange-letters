@@ -1,0 +1,3 @@
+<template>
+  Trade View
+</template>
