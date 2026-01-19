@@ -119,11 +119,11 @@ async function handleSubmit() {
     await auth.login(email.value, password.value)
     router.push('/trades')
   } catch (err: any) {
+    notification.error('Acesso não autorizado')
     error.value = err?.response.data.message || 'Erro ao autenticar'
     if (error.value == 'Incorrect password/email') {
       error.value = 'Acesso não autorizado'
     }
-    notification.error('Acesso não autorizado')
   }
 }
 

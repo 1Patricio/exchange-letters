@@ -126,9 +126,9 @@ async function handleSubmit() {
     await auth.register(name.value, email.value, password.value)
     notification.success('Usuário cadastrado com sucesso!')
   } catch (err: any) {
+    notification.error('Erro ao cadastrar usuário!')
     error.value = err?.message || 'Erro ao cadastrar usuário'
     console.error("Erro: ", err)
-    notification.error('Erro ao cadastrar usuário!')
   }
   router.push('/')
 }
