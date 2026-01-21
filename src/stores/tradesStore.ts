@@ -5,6 +5,7 @@ import { ref } from "vue";
 
 export const useTradesStore = defineStore('trades', () => {
   const listTrade = ref<Trade[]>([])
+  const selectedTrade = ref<Trade | null>()
   const error = ref<string | null>(null)
   const isLoading = ref(false)
   const page = ref(1)
@@ -46,8 +47,14 @@ export const useTradesStore = defineStore('trades', () => {
     }
   }
 
+  async function setSelectedTrade(trade: Trade){
+    selectedTrade.value = trade
+
+  }
+
   return {
     listTrade,
+    selectedTrade,
     isLoading,
     error,
     page,
@@ -55,5 +62,6 @@ export const useTradesStore = defineStore('trades', () => {
     more,
     getTrades,
     postTrade,
+    setSelectedTrade
   }
 })
