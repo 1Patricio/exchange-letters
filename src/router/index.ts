@@ -51,6 +51,14 @@ const router = createRouter({
           }
         },
         {
+          path: 'trade-form',
+          name: 'trade-form',
+          component: () => import('@/pages/TradeForm.vue'),
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
           path: 'profile',
           name: 'profile',
           component: () => import('@/pages/ProfilePage.vue'),

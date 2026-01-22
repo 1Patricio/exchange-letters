@@ -85,7 +85,6 @@ export const useAuthStore = defineStore("authStore", () => {
           email: res.data.email,
           cards: res.data.cards
         }
-        console.log(user.value)
         return user.value;
       }
     } catch (err: any) {

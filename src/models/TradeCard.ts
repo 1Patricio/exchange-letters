@@ -7,3 +7,8 @@ export interface TradeCard {
   type: 'OFFERING' | 'RECEIVING',
   card: Card
 }
+
+export interface TradeCardRequest {
+  cardId: string,
+  type?: 'OFFERING' | 'RECEIVING',
+}

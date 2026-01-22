@@ -75,8 +75,6 @@ export const useTradesStore = defineStore('trades', () => {
   async function getTradesById(id: string | undefined) {
     await getAllTrades()
     selectedTrade.value = listAllTrades.value.find((trade) => trade.id == id)
-    console.log('caiu get vy id' + id)
-    console.log(selectedTrade.value)
   }
 
   async function postTrade(request: TradeCardRequest[]) {
