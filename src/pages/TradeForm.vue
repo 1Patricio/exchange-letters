@@ -328,9 +328,9 @@ function toggleCardReceiving(cardId: string) {
 onMounted(async () => {
   try {
     await cardStore.getUserCards()
-    await cardStore.getCards()
+    await cardStore.getAllCards()
     userCards.value = cardStore.listUserCards
-    cards.value = cardStore.listCards
+    cards.value = cardStore.listAllCards
   } catch {
     notification.error('Erro ao buscar cartas')
   }
