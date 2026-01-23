@@ -28,42 +28,31 @@
           class="col-12 col-sm-6 col-md-4 col-lg-4"
           >
             <q-card flat bordered class="full-height q-pa-md">
-            <q-img
-            :src="card.imageUrl"
-            height="350px"
-            ratio="16/9"
-            class=""
-            />
-
-            <q-card-section>
-              <div class="text-h6 q-mb-sm ellipsis-2-lines" style="min-height: 60px">
-                {{ card.name }}
-              </div>
-            </q-card-section>
-
-            <q-separator />
-
-            <q-card-actions align="right" align-content-end column class="justify-between">
-              <q-btn
-                flat
-                color="secondary"
-                label="Mais detalhes"
-                @click="viewCard(card)"
+              <q-img
+              :src="card.imageUrl"
+              height="350px"
+              ratio="16/9"
+              class=""
               />
-            </q-card-actions>
-          </q-card>
-        </div>
-      </div>
 
-        <div class="q-mt-lg flex flex-center">
-          <q-pagination
-            v-model="cardStore.page"
-            color="teal"
-            :max="cardStore.totalPagesUserCards"
-            :max-pages="6"
-            direction-links
-            @update:model-value="setPagination"
-          />
+              <q-card-section>
+                <div class="text-h6 q-mb-sm ellipsis-2-lines" style="min-height: 60px">
+                  {{ card.name }}
+                </div>
+              </q-card-section>
+
+              <q-separator />
+
+              <q-card-actions align="right" align-content-end column class="justify-between">
+                <q-btn
+                  flat
+                  color="secondary"
+                  label="Mais detalhes"
+                  @click="viewCard(card)"
+                />
+              </q-card-actions>
+            </q-card>
+          </div>
         </div>
       </div>
       <div v-else>
@@ -116,17 +105,6 @@ onMounted(async () => {
     console.error(error)
   }
 })
-
-async function setPagination(newPage: number) {
-  cardStore.page = newPage
-  try {
-    await cardStore.getCards()
-    cards.value = cardStore.listCards
-  } catch (error) {
-    notification.error("Erro ao buscar cartas")
-    console.error(error)
-  }
-}
 
 function viewCard(card: Card) {
   const date = new Date(card.createdAt)
