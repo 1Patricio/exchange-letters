@@ -71,7 +71,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple :to="{name: 'profile'}" class="q-mt-sm">
+            <q-item clickable v-ripple :to="{name: 'profile-card'}" class="q-mt-sm">
               <q-item-section avatar>
                 <q-icon name="account_circle" color="white" />
               </q-item-section>

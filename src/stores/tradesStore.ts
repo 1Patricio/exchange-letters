@@ -3,9 +3,13 @@ import type { Trade } from "@/models/Trade";
 import type { TradeCardRequest } from "@/models/TradeCard";
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { useAuthStore } from "./authStore";
 
 export const useTradesStore = defineStore('trades', () => {
+  const authStore = useAuthStore()
+
   const listTrade = ref<Trade[]>([])
+  const listUserTrade = ref<Trade[]>([])
   const listAllTrades = ref<Trade[]>([])
   const selectedTrade = ref<Trade | null>()
   const error = ref<string | null>(null)
@@ -32,6 +36,20 @@ export const useTradesStore = defineStore('trades', () => {
         nextPage.value++
         return
       }
+    } catch (err: any) {
+      error.value = err.message;
+      throw err
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  async function getUserTrades() {
+    isLoading.value = true;
+    try {
+      await getAllTrades()
+      listUserTrade.value = listAllTrades.value.filter((trade) => trade.userId == authStore.user?.id)
+
     } catch (err: any) {
       error.value = err.message;
       throw err
@@ -93,12 +111,37 @@ export const useTradesStore = defineStore('trades', () => {
     }
   }
 
+  async function deleteTrade(idTrade: string) {
+    isLoading.value = true
+    error.value = null
+
+    if(!listUserTrade.value){
+      getUserTrades()
+    }
+
+    try{
+      if (!listUserTrade.value.find((trade) => trade.id == idTrade)) {
+        throw new Error(error.value!)
+      }
+
+      await api.delete(`/trades/${idTrade}`)
+
+    }catch(err:any){
+      error.value = err?.response?.data?.message || err?.message
+      throw err
+    }finally{
+      isLoading.value = false
+    }
+  }
+
   async function setSelectedTrade(trade: Trade){
     selectedTrade.value = trade
   }
 
   return {
     listTrade,
+    listUserTrade,
+    listAllTrades,
     selectedTrade,
     isLoading,
     error,
@@ -107,8 +150,10 @@ export const useTradesStore = defineStore('trades', () => {
     rpp,
     more,
     getTrades,
+    getUserTrades,
     getTradesById,
     postTrade,
+    deleteTrade,
     setSelectedTrade
   }
 })

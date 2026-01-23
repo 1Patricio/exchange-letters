@@ -346,6 +346,8 @@ async function createTrade() {
     formTrade.value = [...selectedOfferingCards.value, ...selectedReceivingCards.value]
     const response = await tradeStore.postTrade(formTrade.value)
     tradeIdRef.value = response.tradeId
+    tradeStore.page = 1
+    await tradeStore.getTrades()
     router.push({
       name: 'trades'
     })

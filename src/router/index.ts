@@ -59,9 +59,17 @@ const router = createRouter({
           }
         },
         {
-          path: 'profile',
-          name: 'profile',
-          component: () => import('@/pages/ProfilePage.vue'),
+          path: 'profile-card',
+          name: 'profile-card',
+          component: () => import('@/pages/ProfileCard.vue'),
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: 'profile-trade',
+          name: 'profile-trade',
+          component: () => import('@/pages/ProfileTrade.vue'),
           meta: {
             requiresAuth: true
           }

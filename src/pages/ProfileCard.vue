@@ -1,6 +1,11 @@
 <template>
   <div class="q-pa-md">
-    <h5 class="q-mb-sm text-secondary text-bold">Minhas Cartas</h5>
+    <div class="flex text-h6 justify-center q-mb-none" style="align-content: center;">
+      <p class="text-secondary text-bold">Cartas</p>
+      <q-separator vertical spaced size="2px" style="max-height: 32px; color: black;"/>
+      <p><router-link class="text-grey-8" :to="{ name: 'profile-trade' }">Trocas</router-link></p>
+    </div>
+    <h5 class="q-my-sm text-secondary text-bold">Minhas Cartas</h5>
     <div v-if="cardStore.isLoading">
       <LoadingComponent />
     </div>

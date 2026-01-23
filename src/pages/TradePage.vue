@@ -34,7 +34,38 @@
       table-header-class="bg-grey-3"
 
     />
+    <div v-if="authStore.token != null" >
+      <q-separator class="q-my-lg"/>
+      <div class="col">
+  	    <div class="q-pa-md row justify-center q-gutter-md ">
+          <q-card
+            class="col-xs-4 cursor-pointer"
+            style="background-color: #26a69a; min-width: 120px;"
+            @click="onCardClick('card')"
+          >
+            <q-card-section class="row justify-center">
+              <q-icon name="layers" size="6em" color="white"/>
+            </q-card-section>
+            <q-card-actions class="text-bold text-subtitle2 text-white justify-center">
+                Cartas
+            </q-card-actions>
+          </q-card>
 
+          <q-card
+            class="col-xs-4 cursor-pointer"
+            style="background-color: #26a69a; min-width: 120px;"
+            @click="onCardClick('profile-card')"
+          >
+            <q-card-section class="row justify-center">
+              <q-icon name="account_circle" size="6em" color="white"/>
+            </q-card-section>
+            <q-card-actions class="text-bold text-subtitle2 text-white justify-center" :to="{name: 'card'}">
+                Perfil
+            </q-card-actions>
+          </q-card>
+        </div>
+	    </div>
+    </div>
   </div>
 </template>
 
@@ -112,5 +143,9 @@ function onClick(_evt: Event, row: any) {
     name: 'trades-view',
     params: { id: row.id }
   })
+}
+
+function onCardClick(route: string){
+  router.push({name:`${route}`})
 }
 </script>
