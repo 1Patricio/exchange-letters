@@ -10,7 +10,7 @@
       <div v-if="cardStore.isLoading">
         <LoadingComponent />
       </div>
-      
+
       <div v-else v-for="card in filteredCards" :key="card.id" class="col-12 col-sm-6 col-md-4 col-lg-4">
         <q-card flat bordered class="full-height q-pa-md">
           <q-img :src="card.imageUrl" height="350px" ratio="16/9" class="" />
@@ -135,9 +135,9 @@ function viewCard(card: Card) {
   })
 }
 
-function messageConfirmAddUserList(idCard: string) {
+async function messageConfirmAddUserList(idCard: string) {
   if (cardStore.listUserCards.length == 0) {
-    cardStore.getUserCards()
+    await cardStore.getUserCards()
   }
 
   if (cardStore.listUserCards.find((card) => idCard == card.id)) {

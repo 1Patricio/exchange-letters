@@ -4,7 +4,7 @@
       <q-btn
         color="secondary"
         class="row"
-        :to="{name: 'trades'}"
+        @click="backRoute()"
         style="max-width: 130px;"
         icon="arrow_back"
         label="Voltar"
@@ -241,5 +241,9 @@ function viewCard(card: Card) {
       color: 'primary',
     },
   })
+}
+
+function backRoute() {
+  router.go(-1)
 }
 </script>

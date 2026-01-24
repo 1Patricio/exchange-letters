@@ -37,8 +37,31 @@
       hide-pagination
       @row-click="onClick"
       table-header-class="bg-grey-3"
-    />
-    
+    >
+      <template v-slot:body-cell-card-receiving="props">
+        <q-td :props="props">
+            {{ props.row.tradeCards?.find((tradeReceiving: any) => tradeReceiving.type === 'RECEIVING')?.card?.name ?? '-' }}
+            <q-badge
+              rounded
+              color="primary"
+              v-if="props.row.tradeCards?.filter((tradeReceiving: any) => tradeReceiving.type === 'RECEIVING').length >= 2 "
+              :label="`+ ${props.row.tradeCards?.filter((tradeReceiving: any) => tradeReceiving.type === 'RECEIVING').length - 1}`"
+            />
+        </q-td>
+      </template>
+      <template v-slot:body-cell-card-offering="props">
+        <q-td :props="props">
+            {{ props.row.tradeCards?.find((tradeOffering: any) => tradeOffering.type === 'OFFERING')?.card?.name ?? '-' }}
+            <q-badge
+              rounded
+              color="primary"
+              v-if="props.row.tradeCards?.filter((tradeOffering: any) => tradeOffering.type === 'OFFERING').length >= 2 "
+              :label="`+ ${props.row.tradeCards?.filter((tradeOffering: any) => tradeOffering.type === 'OFFERING').length - 1}`"
+            />
+        </q-td>
+      </template>
+    </q-table>
+
     <div v-if="authStore.token != null" >
       <q-separator class="q-my-lg"/>
       <div class="col">
@@ -109,9 +132,9 @@ const columns: QTableColumn[] = [
   {
     name: 'card-receiving',
     label: 'Recebendo',
-    field: (row: any) => row.tradeCards?.find((tradeReceiving: any) => tradeReceiving.type === 'RECEIVING')?.card?.name ?? '-',
+    field: '',
     align: 'left'
-  },
+  }
 ]
 
 onMounted(async () => {
